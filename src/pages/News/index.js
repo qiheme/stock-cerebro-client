@@ -4,12 +4,8 @@ import NewsCard from "../../molecules/NewsCard";
 import WatchList from "../../molecules/WatchList";
 import StockModal from "../../molecules/StockModal";
 import {Card, Carousel, Col, Container, Row, Spinner} from "react-bootstrap";
-// import {useAppContext} from "../../store/GlobalState";
-import {searchNews} from "../../utils";
 
-import {connect} from "react-redux";
-import {getGlobalState} from "../../redux/selectors";
-import {fetchNews, loadingComplete} from "../../redux/actions";
+import {fetchNews} from "../../redux/actions";
 
 import "./News.css";
 
@@ -42,9 +38,6 @@ function News(props) {
     if (data.news.response.length === 0) {
       dispatch(fetchNews(dispatch, mounted));
     }
-    // else if (data.news.response.length > 0) {
-    //   dispatch(loadingComplete());
-    // }
 
     return function cleanup() {
       mounted = false;

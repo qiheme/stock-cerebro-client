@@ -10,7 +10,7 @@ export default function App() {
       <div>
         <NavBar></NavBar>
         <Routes>
-          <Route path="/" element={<News />}></Route>
+          <Route exact path="/" element={<News />}></Route>
           <Route path="/info/:stockId" element={<StockInfo />}></Route>
         </Routes>
       </div>

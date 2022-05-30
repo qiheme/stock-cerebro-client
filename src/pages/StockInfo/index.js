@@ -1,19 +1,17 @@
 import {Col, Container, Row, Spinner} from "react-bootstrap";
 // import Jumbotron from "react-bootstrap/Jumbotron";
 import React, {useState, useEffect} from "react";
+import {useDispatch, useSelector} from "react-redux";
+
 import axios from "axios";
 import {useParams} from "react-router-dom";
-import {useAppContext} from "../../store/GlobalState";
+import {fetchStocks} from "../../redux/actions";
 
 export const StockInfo = () => {
+  const {page, data} = useSelector((state) => state);
+  const dispatch = useDispatch();
   const {stockId} = useParams();
-  const [state, dispatch] = useAppContext();
-
   const [symbolState, setSymbolState] = useState({});
-
-  const searchStock = (symbol) => {
-    return axios.get(`/api/finnhub/quote/${symbol}`);
-  };
 
   const loaderStyles = {
     minHeight: "100vh",
@@ -24,16 +22,18 @@ export const StockInfo = () => {
   };
 
   useEffect(() => {
-    if (stockId) {
-      searchStock(stockId).then((data) => {
-        console.log(data);
-        setSymbolState(data);
-        dispatch({type: "LOADING_COMPLETE"});
-      });
-    }
-  }, [dispatch, stockId]);
+    let mounted = true;
 
-  if (state.page.status.loading) {
+    if (Object.keys(data.stockInfo.response).length === 0) {
+      dispatch(fetchStocks(mounted, stockId));
+    }
+
+    return function cleanup() {
+      mounted = false;
+    };
+  }, [data.stockInfo.response, dispatch, stockId]);
+
+  if (page.status.loading) {
     return (
       <div style={loaderStyles}>
         <Container>
@@ -51,14 +51,6 @@ export const StockInfo = () => {
 
   return (
     <div className="StockInfo">
-      {/* <Jumbotron> */}
-      {/* <p>
-          This is a simple hero unit, a simple jumbotron-style component for
-          calling extra attention to featured content or information.
-        </p>
-        <p>
-          <Button variant="primary">Learn more</Button>
-        </p> */}
       <Container className="container">
         <Row>
           <Col>
@@ -67,7 +59,6 @@ export const StockInfo = () => {
           <Col></Col>
         </Row>
       </Container>
-      {/* </Jumbotron> */}
     </div>
   );
 };

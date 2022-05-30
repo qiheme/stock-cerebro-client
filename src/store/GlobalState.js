@@ -33,6 +33,30 @@ const reducer = (state, action) => {
           },
         },
       };
+    case "FETCH_STOCK_SUCCESS":
+      return {
+        ...state,
+        ...{
+          data: {
+            stockInfo: {
+              status: true,
+              response: action.payload,
+            },
+          },
+        },
+      };
+    case "FETCH_STOCK_FAILED":
+      return {
+        ...state,
+        ...{
+          data: {
+            stockInfo: {
+              status: false,
+              response: {},
+            },
+          },
+        },
+      };
     default:
       throw new Error(`Invalid action type: ${action.type}`);
   }
@@ -48,6 +72,10 @@ const initialState = {
     news: {
       status: false,
       response: [],
+    },
+    stockInfo: {
+      status: false,
+      response: {},
     },
   },
 };
